@@ -1,19 +1,22 @@
 class BoidBody {
   constructor() {
+    let colors = ["#0b6e4f", "#7a918d", "#8bb174", "#b5ca8d"];
+    this.color = random(colors);
+
     this.pos = createVector(random(width), random(height));
     this.vel = p5.Vector.random2D();
     this.vel.setMag(random(2, 5));
     this.acc = createVector(0, 0);
 
-    this.alignmentForce = 0.5;
-    this.attractionForce = 0.4;
-    this.seperationForce = 0.4;
+    this.alignmentForce = 0.6;
+    this.attractionForce = 0.35;
+    this.seperationForce = 0.5;
 
-    this.alignmentRadius = 30;
-    this.attractionRadius = 25;
-    this.collisionRadius = 15;
+    this.alignmentRadius = 100;
+    this.attractionRadius = 40;
+    this.collisionRadius = 10;
 
-    this.maxSpeed = 1;
+    this.maxSpeed = 2;
 
     this.update();
   }
@@ -137,18 +140,7 @@ class BoidBody {
   }
 
   draw() {
-    // Draw a triangle rotated in the direction of velocity
-    let theta = this.vel.heading() + radians(90);
-    // heading2D() above is now heading() but leaving old syntax until Processing.js catches up
-    let r = 2;
-    fill(200, 100);
-    stroke(255);
-    translate(this.pos.x, this.pos.y);
-    rotate(theta);
-    beginShape(TRIANGLES);
-    vertex(0, -r * 2);
-    vertex(-r, r * 2);
-    vertex(r, r * 2);
-    endShape();
+    fill(this.color);
+    ellipse(this.pos.x, this.pos.y, 4);
   }
 }
