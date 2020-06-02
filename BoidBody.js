@@ -5,11 +5,15 @@ class BoidBody {
     this.vel.setMag(random(2, 5));
     this.acc = createVector(0, 0);
 
+    this.alignmentForce = 0.5;
     this.attractionForce = 0.4;
     this.seperationForce = 0.4;
 
-    this.attractionRadius = 100;
-    this.maxSpeed = 4;
+    this.alignmentRadius = 30;
+    this.attractionRadius = 25;
+    this.collisionRadius = 15;
+
+    this.maxSpeed = 1;
 
     this.update();
   }
@@ -65,7 +69,7 @@ class BoidBody {
         otherBoid.pos.x,
         otherBoid.pos.y
       );
-      if (distance < this.attractionRadius && otherBoid != this) {
+      if (distance < this.collisionRadius && otherBoid != this) {
         let diff = p5.Vector.sub(this.pos, otherBoid.pos);
         diff.mult((1 / distance) * distance);
         steering.add(diff);
@@ -123,7 +127,7 @@ class BoidBody {
   }
 
   update() {
-    this.maxSpeed = 4 * maxSpeedSlider.value();
+    this.maxSpeed = maxSpeedSlider.value();
     this.pos.add(this.vel);
     this.vel.add(this.acc);
     this.vel.limit(this.maxSpeed);
@@ -133,8 +137,18 @@ class BoidBody {
   }
 
   draw() {
-    strokeWeight(10);
+    // Draw a triangle rotated in the direction of velocity
+    let theta = this.vel.heading() + radians(90);
+    // heading2D() above is now heading() but leaving old syntax until Processing.js catches up
+    let r = 2;
+    fill(200, 100);
     stroke(255);
-    point(this.pos.x, this.pos.y);
+    translate(this.pos.x, this.pos.y);
+    rotate(theta);
+    beginShape(TRIANGLES);
+    vertex(0, -r * 2);
+    vertex(-r, r * 2);
+    vertex(r, r * 2);
+    endShape();
   }
 }
